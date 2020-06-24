@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://kit.fontawesome.com/3757b4acf5.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="row">
+          <form>
+            <input
+              type="text"
+              placeholder="Search city..."
+              id="search-holder"
+              autocomplete="off"
+            />
+          </form>
+          <button id="magnifying-glass">
+            <i class="fas fa-search-location"></i>
+          </button>
+        </div>
+        <p id="date-time">
+          18th May, 2020 17:47 CEST
+        </p>
+      </header>
+      <main>
+        <div class="current-weather">
+          <div id="weather-icon">
+            <i class="fas fa-sun"></i>
+          </div>
+          <h1>
+            <span class="temp-value">--</span>
+            <span
+              ><a href="#" id="celsius">°C|</a
+              ><a href="#" id="farenheit">°F</a></span
+            >
+          </h1>
+          <div class="row">
+            <h2 class="location">
+              --
+            </h2>
+          </div>
+        </div>
+        <div class="weather-description">
+          <div class="row">
+            <div class="col max-min">-</div>
+            <div class="col feels-like">-</div>
+            <div class="col humidity">-</div>
+            <div class="col wind">-</div>
+          </div>
+          <div class="row">
+            <div class="col">Max-Min</div>
+            <div class="col">Feels like</div>
+            <div class="col">Humidity</div>
+            <div class="col">Wind</div>
+          </div>
+        </div>
+        <div class="temp-hours">
+          <div class="row">
+            <div class="col hour">18:00</div>
+            <div class="col hour">19:00</div>
+            <div class="col hour">20:00</div>
+            <div class="col hour">21:00</div>
+            <div class="col hour">22:00</div>
+          </div>
+          <div class="row">
+            <div class="col weather-icons-mini">
+              <i class="fas fa-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-cloud-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-cloud-moon"></i>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col deg-hour">20°</div>
+            <div class="col deg-hour">19°</div>
+            <div class="col deg-hour">18°</div>
+            <div class="col deg-hour">17°</div>
+            <div class="col deg-hour">15°</div>
+          </div>
+        </div>
+        <div class="Week-days">
+          <div class="row">
+            <div class="col day">TUE</div>
+            <div class="col day">WED</div>
+            <div class="col day">THU</div>
+            <div class="col day">FRI</div>
+            <div class="col day">SAT</div>
+          </div>
+          <div class="row">
+            <div class="col weather-icons-mini">
+              <i class="fas fa-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-cloud-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-sun"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-cloud-sun-rain"></i>
+            </div>
+            <div class="col weather-icons-mini">
+              <i class="fas fa-cloud-showers-heavy"></i>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col deg-hour">20°/17°</div>
+            <div class="col deg-hour">19°/15°</div>
+            <div class="col deg-hour">18°/13°</div>
+            <div class="col deg-hour">17°/12°</div>
+            <div class="col deg-hour">15°/11°</div>
+          </div>
+        </div>
+      </main>
+      <footer>
+        Coded by Diana Rivero
+      </footer>
+    </div>
+  </body>
+</html>
