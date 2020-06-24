@@ -50,3 +50,19 @@ let currentDate = `${currentDay}, ${ordinalAbb} ${currentMonth}, ${year}`;
 let currentTime = ` ${hours}:${currentMinutes}`;
 let currentDateTime = document.querySelector("#date-time");
 currentDateTime.innerHTML = `${currentDate} ${currentTime}`;
+
+//Show current Position and weather
+let apiKey = "4bf6877c9fd424fd93f8acf13ea89864";
+let apiUrl = `https://api.openweathermap.org/data/2.5/weather?`;
+
+function showCurrentPosition(position) {
+  console.log(position);
+  let latitude = position.coords.latitude;
+  let longitude = position.coords.longitude;
+  console.log(latitude);
+  console.log(longitude);
+  axios.get(
+    `${apiUrl}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+  );
+}
+navigator.geolocation.getCurrentPosition(showCurrentPosition);
