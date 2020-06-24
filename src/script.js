@@ -21,8 +21,18 @@ let date = dateTime.getDate();
 let year = dateTime.getFullYear();
 let hours = dateTime.getHours();
 let minutes = dateTime.getMinutes();
+let currentMinutes = minutesTwoDigits();
+
+// Minutes in 2 digits
+function minutesTwoDigits() {
+  if (minutes < 10) {
+    return `0` + minutes;
+  } else {
+    return minutes;
+  }
+}
 
 let currentDate = `${currentDay}, ${date} ${currentMonth}, ${year}`;
-let currentTime = ` ${hours}:${minutes}`;
+let currentTime = ` ${hours}:${currentMinutes}`;
 let currentDateTime = document.querySelector("#date-time");
 currentDateTime.innerHTML = `${currentDate} ${currentTime}`;
