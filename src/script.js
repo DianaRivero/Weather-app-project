@@ -125,6 +125,10 @@ function convertToFarenheit(event) {
   let feelsLikeFar = Math.round(savedFeelsLike * 1.8 + 32);
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${feelsLikeFar}°`;
+  if (farenheit) {
+    this.style.color = "black";
+    celsius.style.color = "#1284FF";
+  }
 }
 let farenheit = document.querySelector("#farenheit");
 farenheit.addEventListener("click", convertToFarenheit);
@@ -138,6 +142,10 @@ function convertToCelsius(event) {
   tempMaxMin.innerHTML = `${tempMax}° / ${tempMin}°`;
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${savedFeelsLike}°`;
+  if (celsius) {
+    this.style.color = "black";
+    farenheit.style.color = "#1284FF";
+  }
 }
 let celsius = document.querySelector("#celsius");
 celsius.addEventListener("click", convertToCelsius);
