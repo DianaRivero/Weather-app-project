@@ -54,6 +54,7 @@ currentDateTime.innerHTML = `${currentDate} ${currentTime}`;
 //Show current Position and weather
 let apiKey = "4bf6877c9fd424fd93f8acf13ea89864";
 let apiUrl = `https://api.openweathermap.org/data/2.5/weather?`;
+let savedTemperature = 0;
 
 function showCurrentPosition(position) {
   console.log(position);
@@ -71,7 +72,7 @@ navigator.geolocation.getCurrentPosition(showCurrentPosition);
 
 function showWeather(response) {
   console.log(response);
-  let savedTemperature = Math.round(response.data.main.temp);
+  savedTemperature = Math.round(response.data.main.temp);
   let temp = document.querySelector("h1 .temp-value");
   temp.innerHTML = savedTemperature;
   let place = document.querySelector(".location");
