@@ -91,3 +91,22 @@ function showCity(event) {
 }
 let form = document.querySelector("form");
 form.addEventListener("submit", showCity);
+
+//Convert C° to F°
+function convertToFarenheit(event) {
+  event.preventDefault();
+  let tempF = Math.round(savedTemperature * 1.8 + 32);
+  let temperature = document.querySelector("h1 .temp-value");
+  temperature.innerHTML = tempF;
+}
+let farenheit = document.querySelector("#farenheit");
+farenheit.addEventListener("click", convertToFarenheit);
+
+//Convert F° to C°
+function convertToCelsius(event) {
+  event.preventDefault();
+  let temperature = document.querySelector("h1 .temp-value");
+  temperature.innerHTML = savedTemperature;
+}
+let celsius = document.querySelector("#celsius");
+celsius.addEventListener("click", convertToCelsius);
