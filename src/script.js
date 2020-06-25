@@ -71,7 +71,12 @@ function showCurrentPosition(position) {
     )
     .then(showWeather);
 }
-navigator.geolocation.getCurrentPosition(showCurrentPosition);
+function searchLocation(event) {
+  event.preventDefault();
+  navigator.geolocation.getCurrentPosition(showCurrentPosition);
+}
+let searchBtn = document.querySelector("#magnifying-glass");
+searchBtn.addEventListener("click", searchLocation);
 
 function showWeather(response) {
   console.log(response);
