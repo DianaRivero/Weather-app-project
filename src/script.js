@@ -77,3 +77,16 @@ function showWeather(response) {
   let place = document.querySelector(".location");
   place.innerHTML = response.data.name.toUpperCase().trim();
 }
+
+//Search City
+function showCity(event) {
+  event.preventDefault();
+  let searchHolder = document.querySelector("#search-holder").value;
+  let city = document.querySelector(".location");
+  city.innerHTML = searchHolder.toUpperCase().trim();
+  axios
+    .get(`${apiUrl}q=${searchHolder}&appid=${apiKey}&units=metric`)
+    .then(showWeather);
+}
+let form = document.querySelector("form");
+form.addEventListener("submit", showCity);
