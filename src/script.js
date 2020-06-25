@@ -61,8 +61,19 @@ function showCurrentPosition(position) {
   let longitude = position.coords.longitude;
   console.log(latitude);
   console.log(longitude);
-  axios.get(
-    `${apiUrl}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
-  );
+  axios
+    .get(
+      `${apiUrl}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+    )
+    .then(showWeather);
 }
 navigator.geolocation.getCurrentPosition(showCurrentPosition);
+
+function showWeather(response) {
+  console.log(response);
+  let savedTemperature = Math.round(response.data.main.temp);
+  let temp = document.querySelector("h1 .temp-value");
+  temp.innerHTML = savedTemperature;
+  let place = document.querySelector(".location");
+  place.innerHTML = response.data.name.toUpperCase().trim();
+}
