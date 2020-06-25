@@ -55,6 +55,9 @@ currentDateTime.innerHTML = `${currentDate} ${currentTime}`;
 let apiKey = "4bf6877c9fd424fd93f8acf13ea89864";
 let apiUrl = `https://api.openweathermap.org/data/2.5/weather?`;
 let savedTemperature = 0;
+let savedFeelsLike = 0;
+let tempMax = 0;
+let tempMin = 0;
 
 function showCurrentPosition(position) {
   console.log(position);
@@ -77,6 +80,18 @@ function showWeather(response) {
   temp.innerHTML = savedTemperature;
   let place = document.querySelector(".location");
   place.innerHTML = response.data.name.toUpperCase().trim();
+  tempMax = Math.round(response.data.main.temp_max);
+  tempMin = Math.round(response.data.main.temp_min);
+  let tempMaxMin = document.querySelector(".max-min");
+  tempMaxMin.innerHTML = `${tempMax}° / ${tempMin}°`;
+  savedFeelsLike = Math.round(response.data.main.feels_like);
+  let feelsLike = document.querySelector(".feels-like");
+  feelsLike.innerHTML = `${savedFeelsLike}°`;
+  console.log(feelsLike);
+  let humidity = document.querySelector(".humidity");
+  humidity.innerHTML = `${Math.round(response.data.main.humidity)}%`;
+  let wind = document.querySelector(".wind");
+  wind.innerHTML = `${Math.round(response.data.wind.speed)}km/h`;
 }
 
 //Search City
