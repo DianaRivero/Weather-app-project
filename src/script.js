@@ -20,10 +20,19 @@ let currentMonth = months[dateTime.getMonth()];
 let date = dateTime.getDate();
 let year = dateTime.getFullYear();
 let hours = dateTime.getHours();
+let currentHours = hoursTwoDigits();
 let minutes = dateTime.getMinutes();
 let currentMinutes = minutesTwoDigits();
 
-// Minutes in 2 digits
+// Hours and Minutes in 2 digits
+
+function hoursTwoDigits() {
+  if (hours < 10) {
+    return `0` + hours;
+  } else {
+    return hours;
+  }
+}
 function minutesTwoDigits() {
   if (minutes < 10) {
     return `0` + minutes;
@@ -31,7 +40,6 @@ function minutesTwoDigits() {
     return minutes;
   }
 }
-
 //Date ordinal abbreviations
 function dateOrdinal() {
   if (date === 1 || date === 21 || date === 31) {
@@ -47,7 +55,7 @@ function dateOrdinal() {
 
 let ordinalAbb = dateOrdinal();
 let currentDate = `${currentDay}, ${ordinalAbb} ${currentMonth}, ${year}`;
-let currentTime = ` ${hours}:${currentMinutes}`;
+let currentTime = ` ${currentHours}:${currentMinutes}`;
 let currentDateTime = document.querySelector("#date-time");
 currentDateTime.innerHTML = `${currentDate} ${currentTime}`;
 
