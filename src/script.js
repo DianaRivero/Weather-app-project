@@ -66,6 +66,7 @@ let savedTemperature = 0;
 let savedFeelsLike = 0;
 let tempMax = 0;
 let tempMin = 0;
+let iconId = 0;
 
 function showCurrentPosition(position) {
   console.log(position);
@@ -105,6 +106,9 @@ function showWeather(response) {
   humidity.innerHTML = `${Math.round(response.data.main.humidity)}%`;
   let wind = document.querySelector(".wind");
   wind.innerHTML = `${Math.round(response.data.wind.speed)}km/h`;
+  iconId = response.data.weather[0].icon;
+  let iconMain = document.querySelector("#main-icon");
+  iconMain.innerHTML = `<img src="img/${iconId}.png" id="weather-icon">`;
 }
 
 //Search City
