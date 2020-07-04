@@ -66,20 +66,19 @@ main {
   padding: 30px;
 }
 #weather-icon {
-  width: 75px;
-  float: right;
+  font-size: 40px;
+  text-align: right;
   position: relative;
-  left: 80px;
+  right: 35px;
+  top: 10px;
   color: #fef9d7;
-  filter: drop-shadow(2px 2px 3px #333339);
+  text-shadow: 2px 2px 3px #333339;
 }
 h1 {
   font-size: 120px;
   text-align: center;
   position: relative;
   left: 10px;
-  top: -35px;
-  margin: 0 auto;
   color: #22272b;
 }
 #celsius,
