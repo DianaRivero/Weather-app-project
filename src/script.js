@@ -1,47 +1,47 @@
-let dateTime = new Date();
+// Format Date and Time
+function formatDate(timestamp) {
+  let dateTime = new Date(timestamp);
+  let year = dateTime.getFullYear();
+  let days = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
+  let currentDay = days[dateTime.getDay()];
+  let months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  let currentMonth = months[dateTime.getMonth()];
+  let ordinalAbb = dateOrdinal(timestamp);
+  let currentDate = `${currentDay}, ${ordinalAbb} ${currentMonth}, ${year}`;
 
-let days = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
-let currentDay = days[dateTime.getDay()];
-let months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-let currentMonth = months[dateTime.getMonth()];
-let date = dateTime.getDate();
-let year = dateTime.getFullYear();
-let hours = dateTime.getHours();
-let currentHours = hoursTwoDigits();
-let minutes = dateTime.getMinutes();
-let currentMinutes = minutesTwoDigits();
+  return `${currentDate} ${formatTime(timestamp)}`;
+}
 
-// Hours and Minutes in 2 digits
-
-function hoursTwoDigits() {
+function formatTime(timestamp) {
+  let dateTime = new Date(timestamp);
+  let hours = dateTime.getHours();
   if (hours < 10) {
-    return `0` + hours;
-  } else {
-    return hours;
+    hours = `0${hours}`;
   }
-}
-function minutesTwoDigits() {
+  let minutes = dateTime.getMinutes();
   if (minutes < 10) {
-    return `0` + minutes;
-  } else {
-    return minutes;
+    minutes = `0${minutes}`;
   }
+  return `${hours}:${minutes}`;
 }
+
 //Date ordinal abbreviations
-function dateOrdinal() {
+function dateOrdinal(timestamp) {
+  let dateTime = new Date(timestamp);
+  let date = dateTime.getDate();
   if (date === 1 || date === 21 || date === 31) {
     return date + `st`;
   } else if (date === 2 || date === 22) {
@@ -53,20 +53,18 @@ function dateOrdinal() {
   }
 }
 
-let ordinalAbb = dateOrdinal();
-let currentDate = `${currentDay}, ${ordinalAbb} ${currentMonth}, ${year}`;
-let currentTime = ` ${currentHours}:${currentMinutes}`;
-let currentDateTime = document.querySelector("#date-time");
-currentDateTime.innerHTML = `${currentDate} ${currentTime}`;
-
 //Show current Position and weather
 let apiKey = "4bf6877c9fd424fd93f8acf13ea89864";
 let apiUrl = `https://api.openweathermap.org/data/2.5/weather?`;
-let savedTemperature = 0;
-let savedFeelsLike = 0;
-let tempMax = 0;
-let tempMin = 0;
-let iconId = 0;
+let apiUrlForecast = `https://api.openweathermap.org/data/2.5/forecast?`;
+let savedTemperature = null;
+let savedFeelsLike = null;
+let tempMax = null;
+let tempMin = null;
+let iconId = null;
+let hourTempMax = [];
+let hourTempMin = [];
+let houTempMaxMin = [];
 
 function showCurrentPosition(position) {
   console.log(position);
@@ -79,6 +77,11 @@ function showCurrentPosition(position) {
       `${apiUrl}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
     )
     .then(showWeather);
+  axios
+    .get(
+      `${apiUrlForecast}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+    )
+    .then(displayForecast);
 }
 function searchLocation(event) {
   event.preventDefault();
@@ -101,17 +104,46 @@ function showWeather(response) {
   savedFeelsLike = Math.round(response.data.main.feels_like);
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${savedFeelsLike}°`;
-  console.log(feelsLike);
   let humidity = document.querySelector(".humidity");
   humidity.innerHTML = `${Math.round(response.data.main.humidity)}%`;
   let wind = document.querySelector(".wind");
   wind.innerHTML = `${Math.round(response.data.wind.speed)}km/h`;
+  let DateElement = document.querySelector("#date-time");
+  DateElement.innerHTML = `${formatDate(response.data.dt * 1000)}`;
   iconId = response.data.weather[0].icon;
   let iconMain = document.querySelector("#main-icon");
   iconMain.innerHTML = `<img src="img/${iconId}.png" id="weather-icon">`;
 }
-
-//Search City
+//Forecast section
+function displayForecast(response) {
+  console.log(response.data);
+  let forecastHoursElement = document.querySelector("#forecast-hours");
+  forecastHoursElement.innerHTML = null;
+  let forecastHours = null;
+  let iconsHoursId = null;
+  for (let i = 0; i <= 4; i++) {
+    forecastHours = response.data.list[i];
+    iconsHoursId = forecastHours.weather[0].icon;
+    hourTempMax[i] = `${Math.round(forecastHours.main.temp_max)}`;
+    hourTempMin[i] = `${Math.round(forecastHours.main.temp_min)}`;
+    forecastHoursElement.innerHTML += `
+  <div class="col">
+    <div class="row">
+        <div class="col">${formatTime(forecastHours.dt * 1000)}</div>
+    </div> 
+    <div class="row">
+        <div class="col weather-icons-mini">
+          <img src="img/${iconsHoursId}.png" class = "weather-icons-mini">
+        </div> 
+    </div>   
+    <div class="row">
+        <div class="col deg-hour">${hourTempMax[i]}°/${hourTempMin[i]}°</div>
+    </div>  
+  </div>  
+ `;
+  }
+}
+//Search city
 function showCity(event) {
   event.preventDefault();
   let searchHolder = document.querySelector("#search-holder").value;
@@ -120,6 +152,9 @@ function showCity(event) {
   axios
     .get(`${apiUrl}q=${searchHolder}&appid=${apiKey}&units=metric`)
     .then(showWeather);
+  axios
+    .get(`${apiUrlForecast}q=${searchHolder}&appid=${apiKey}&units=metric`)
+    .then(displayForecast);
 }
 let form = document.querySelector("form");
 form.addEventListener("submit", showCity);
@@ -137,6 +172,13 @@ function convertToFarenheit(event) {
   let feelsLikeFar = Math.round(savedFeelsLike * 1.8 + 32);
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${feelsLikeFar}°`;
+  hourTempMaxMin = document.querySelectorAll(".deg-hour");
+  hourTempMaxMin.forEach((hourTempMaxMin, i) => {
+    let hourTempMaxFar = Math.round(hourTempMax[i] * 1.8 + 32);
+    let hourTempMinFar = Math.round(hourTempMin[i] * 1.8 + 32);
+    hourTempMaxMin.innerHTML = `${hourTempMaxFar}°/${hourTempMinFar}°`;
+  });
+
   if (farenheit) {
     this.style.color = "black";
     celsius.style.color = "#1284FF";
@@ -154,6 +196,10 @@ function convertToCelsius(event) {
   tempMaxMin.innerHTML = `${tempMax}° / ${tempMin}°`;
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${savedFeelsLike}°`;
+  hourTempMaxMin = document.querySelectorAll(".deg-hour");
+  hourTempMaxMin.forEach((hourTempMaxMin, i) => {
+    hourTempMaxMin.innerHTML = `${hourTempMax[i]}°/${hourTempMin[i]}`;
+  });
   if (celsius) {
     this.style.color = "black";
     farenheit.style.color = "#1284FF";
