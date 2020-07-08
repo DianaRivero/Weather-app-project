@@ -106,7 +106,7 @@ h1 span a:hover {
 }
 .weather-description,
 .temp-hours,
-.Week-days {
+.temp-week-days {
   text-align: center;
   font-size: 14px;
   font-weight: bold;
@@ -134,17 +134,19 @@ h1 span a:hover {
   opacity: 1;
   filter: drop-shadow(2px 2px 3px #333339);
 }
-.weather-icons-mini {
+.icons-hourly-forecast,
+.icons-daily-forecast {
   width: 25px;
   text-align: center;
   color: #ffffff;
   opacity: 1;
   filter: drop-shadow(2px 2px 3px #333339);
 }
-.deg-hour {
+.deg-hour,
+.deg-days {
   font-size: 12px;
 }
-.Week-days {
+.temp-week-days {
   background-color: rgba(227, 231, 234, 0.7);
   border-radius: 10px;
   box-shadow: 1px 1px 2px #7f8389;

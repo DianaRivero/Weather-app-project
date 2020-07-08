@@ -37,6 +37,12 @@ function formatTime(timestamp) {
   }
   return `${hours}:${minutes}`;
 }
+function formatWeekDay(timestamp) {
+  let dateTime = new Date(timestamp);
+  let days = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
+  let currentDay = days[dateTime.getDay()];
+  return `${currentDay}`;
+}
 
 //Date ordinal abbreviations
 function dateOrdinal(timestamp) {
@@ -56,15 +62,16 @@ function dateOrdinal(timestamp) {
 //Show current Position and weather
 let apiKey = "4bf6877c9fd424fd93f8acf13ea89864";
 let apiUrl = `https://api.openweathermap.org/data/2.5/weather?`;
-let apiUrlForecast = `https://api.openweathermap.org/data/2.5/forecast?`;
+let apiUrlForecast = `https://api.openweathermap.org/data/2.5/onecall?`;
 let savedTemperature = null;
 let savedFeelsLike = null;
 let tempMax = null;
 let tempMin = null;
 let iconId = null;
-let hourTempMax = [];
-let hourTempMin = [];
-let houTempMaxMin = [];
+let hourTempCel = [];
+let hourTempFar = [];
+let dayTempMax = [];
+let dayTempMin = [];
 
 function showCurrentPosition(position) {
   console.log(position);
@@ -79,7 +86,7 @@ function showCurrentPosition(position) {
     .then(showWeather);
   axios
     .get(
-      `${apiUrlForecast}lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`
+      `${apiUrlForecast}lat=${latitude}&lon=${longitude}&exclude=current,minutely&appid=${apiKey}&units=metric`
     )
     .then(displayForecast);
 }
@@ -113,6 +120,10 @@ function showWeather(response) {
   iconId = response.data.weather[0].icon;
   let iconMain = document.querySelector("#main-icon");
   iconMain.innerHTML = `<img src="img/${iconId}.png" id="weather-icon">`;
+  let latitude = response.data.coord.lat;
+  let longitude = response.data.coord.lon;
+  let apiUrl = `${apiUrlForecast}lat=${latitude}&lon=${longitude}&exclude=current,minutely&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
 }
 //Forecast section
 function displayForecast(response) {
@@ -121,28 +132,54 @@ function displayForecast(response) {
   forecastHoursElement.innerHTML = null;
   let forecastHours = null;
   let iconsHoursId = null;
-  for (let i = 0; i <= 4; i++) {
-    forecastHours = response.data.list[i];
+  let forecastDaysElement = document.querySelector("#forecast-week-days");
+  forecastDaysElement.innerHTML = null;
+  let forecastWeekDays = null;
+  let iconsDaysId = null;
+
+  for (let i = 1; i <= 5; i++) {
+    forecastHours = response.data.hourly[i];
     iconsHoursId = forecastHours.weather[0].icon;
-    hourTempMax[i] = `${Math.round(forecastHours.main.temp_max)}`;
-    hourTempMin[i] = `${Math.round(forecastHours.main.temp_min)}`;
+    hourTempCel[i - 1] = `${Math.round(forecastHours.temp)}`;
     forecastHoursElement.innerHTML += `
   <div class="col">
     <div class="row">
         <div class="col">${formatTime(forecastHours.dt * 1000)}</div>
     </div> 
     <div class="row">
-        <div class="col weather-icons-mini">
-          <img src="img/${iconsHoursId}.png" class = "weather-icons-mini">
+        <div class="col">
+          <img src="img/${iconsHoursId}.png" class = "icons-hourly-forecast">
         </div> 
     </div>   
     <div class="row">
-        <div class="col deg-hour">${hourTempMax[i]}°/${hourTempMin[i]}°</div>
+        <div class="col deg-hour">${hourTempCel[i - 1]}°</div>
     </div>  
   </div>  
  `;
+    forecastWeekDays = response.data.daily[i];
+    iconsDaysId = forecastWeekDays.weather[0].icon;
+    dayTempMax[i - 1] = `${Math.round(forecastWeekDays.temp.max)}`;
+    dayTempMin[i - 1] = `${Math.round(forecastWeekDays.temp.min)}`;
+    forecastDaysElement.innerHTML += `
+    <div class="col">
+      <div class="row">
+          <div class="col">${formatWeekDay(forecastWeekDays.dt * 1000)}</div>
+      </div>
+      <div class="row">
+          <div class="col">
+            <img src="img/${iconsDaysId}.png" class = "icons-daily-forecast">
+          </div>
+      </div>
+      <div class="row">
+          <div class="col deg-days">${dayTempMax[i - 1]}°/${
+      dayTempMin[i - 1]
+    }°</div>
+      </div>
+    </div>
+   `;
   }
 }
+
 //Search city
 function showCity(event) {
   event.preventDefault();
@@ -152,9 +189,6 @@ function showCity(event) {
   axios
     .get(`${apiUrl}q=${searchHolder}&appid=${apiKey}&units=metric`)
     .then(showWeather);
-  axios
-    .get(`${apiUrlForecast}q=${searchHolder}&appid=${apiKey}&units=metric`)
-    .then(displayForecast);
 }
 let form = document.querySelector("form");
 form.addEventListener("submit", showCity);
@@ -172,11 +206,18 @@ function convertToFarenheit(event) {
   let feelsLikeFar = Math.round(savedFeelsLike * 1.8 + 32);
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${feelsLikeFar}°`;
-  hourTempMaxMin = document.querySelectorAll(".deg-hour");
-  hourTempMaxMin.forEach((hourTempMaxMin, i) => {
-    let hourTempMaxFar = Math.round(hourTempMax[i] * 1.8 + 32);
-    let hourTempMinFar = Math.round(hourTempMin[i] * 1.8 + 32);
-    hourTempMaxMin.innerHTML = `${hourTempMaxFar}°/${hourTempMinFar}°`;
+  let hourTemp = document.querySelectorAll(".deg-hour");
+  hourTemp.forEach((hourTemp, i) => {
+    console.log(i);
+    hourTempFar[i] = Math.round(hourTempCel[i] * 1.8 + 32);
+    hourTemp.innerHTML = `${hourTempFar[i]}°`;
+  });
+  let weekDayTemp = document.querySelectorAll(".deg-days");
+  weekDayTemp.forEach((weekDayTemp, i) => {
+    let dayTempMaxFar = Math.round(dayTempMax[i] * 1.8 + 32);
+    let dayTempMinFar = Math.round(dayTempMin[i] * 1.8 + 32);
+    weekDayTemp.innerHTML = `${dayTempMaxFar}°/${dayTempMinFar}°`;
+    console.log(weekDayTemp);
   });
 
   if (farenheit) {
@@ -193,12 +234,16 @@ function convertToCelsius(event) {
   let temperature = document.querySelector("h1 .temp-value");
   temperature.innerHTML = savedTemperature;
   let tempMaxMin = document.querySelector(".max-min");
-  tempMaxMin.innerHTML = `${tempMax}° / ${tempMin}°`;
+  tempMaxMin.innerHTML = `${tempMax}°/${tempMin}°`;
   let feelsLike = document.querySelector(".feels-like");
   feelsLike.innerHTML = `${savedFeelsLike}°`;
-  hourTempMaxMin = document.querySelectorAll(".deg-hour");
-  hourTempMaxMin.forEach((hourTempMaxMin, i) => {
-    hourTempMaxMin.innerHTML = `${hourTempMax[i]}°/${hourTempMin[i]}`;
+  hourTemp = document.querySelectorAll(".deg-hour");
+  hourTemp.forEach((hourTemp, i) => {
+    hourTemp.innerHTML = `${hourTempCel[i]}°`;
+  });
+  weekDayTemp = document.querySelectorAll(".deg-days");
+  weekDayTemp.forEach((weekDayTemp, i) => {
+    weekDayTemp.innerHTML = `${dayTempMax[i]}°/${dayTempMin[i]}°`;
   });
   if (celsius) {
     this.style.color = "black";
