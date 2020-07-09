@@ -219,7 +219,6 @@ function convertToFarenheit(event) {
     weekDayTemp.innerHTML = `${dayTempMaxFar}°/${dayTempMinFar}°`;
     console.log(weekDayTemp);
   });
-
   if (farenheit) {
     this.style.color = "black";
     celsius.style.color = "#1284FF";

@@ -87,6 +87,9 @@ h1 {
   font-size: 20px;
   vertical-align: super;
 }
+#celsius {
+  color: black;
+}
 
 h1 span a {
   font-weight: bold;
