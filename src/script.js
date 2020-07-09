@@ -251,3 +251,13 @@ function convertToCelsius(event) {
 }
 let celsius = document.querySelector("#celsius");
 celsius.addEventListener("click", convertToCelsius);
+
+//Background Change
+function changeBackground(iconId) {
+  let backgroundImage = document.querySelector(".container");
+  if (iconId.includes("n")) {
+    return backgroundImage.setAttribute("src", "img/night-background2.png");
+  } else {
+    return backgroundImage.setAttribute("src", "img/day-background2.png");
+  }
+}
