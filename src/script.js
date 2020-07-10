@@ -189,6 +189,8 @@ function showCity(event) {
   axios
     .get(`${apiUrl}q=${searchHolder}&appid=${apiKey}&units=metric`)
     .then(showWeather);
+  form = document.querySelector("form");
+  form.reset();
 }
 let form = document.querySelector("form");
 form.addEventListener("submit", showCity);
