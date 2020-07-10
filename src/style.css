@@ -1,4 +1,5 @@
 * {
+  box-sizing: border-box;
   line-height: 1.25rem;
   margin: 0 auto;
   padding: 0;
@@ -22,7 +23,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 400px;
-  height: 700px;
+  height: 725px;
   padding: 30px;
   border-radius: 25px;
   background-image: url("../img/day-background2.png");
@@ -139,11 +140,11 @@ h1 span a:hover {
 }
 .icons-hourly-forecast,
 .icons-daily-forecast {
-  width: 25px;
+  width: 35px;
   text-align: center;
   color: #ffffff;
   opacity: 1;
-  filter: drop-shadow(2px 2px 3px #333339);
+  filter: drop-shadow(1px 1px 2px #000000);
 }
 .deg-hour,
 .deg-days {
@@ -165,7 +166,7 @@ footer {
   font-size: lighter;
   text-shadow: 1px 2px 4px #fef9d7;
   border-radius: 10px;
-  margin-top: 30px;
+  margin-top: 50px;
 }
 footer a {
   text-decoration: none;
