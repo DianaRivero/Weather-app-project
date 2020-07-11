@@ -1,6 +1,7 @@
+let dateTime = new Date();
 // Format Date and Time
 function formatDate(timestamp) {
-  let dateTime = new Date(timestamp);
+  dateTime = new Date(timestamp);
   let year = dateTime.getFullYear();
   let days = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
   let currentDay = days[dateTime.getDay()];
@@ -26,7 +27,7 @@ function formatDate(timestamp) {
 }
 
 function formatTime(timestamp) {
-  let dateTime = new Date(timestamp);
+  dateTime = new Date(timestamp);
   let hours = dateTime.getHours();
   if (hours < 10) {
     hours = `0${hours}`;
@@ -38,7 +39,7 @@ function formatTime(timestamp) {
   return `${hours}:${minutes}`;
 }
 function formatWeekDay(timestamp) {
-  let dateTime = new Date(timestamp);
+  dateTime = new Date(timestamp);
   let days = ["Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"];
   let currentDay = days[dateTime.getDay()];
   return `${currentDay}`;
@@ -46,7 +47,7 @@ function formatWeekDay(timestamp) {
 
 //Date ordinal abbreviations
 function dateOrdinal(timestamp) {
-  let dateTime = new Date(timestamp);
+  dateTime = new Date(timestamp);
   let date = dateTime.getDate();
   if (date === 1 || date === 21 || date === 31) {
     return date + `st`;
@@ -67,11 +68,15 @@ let savedTemperature = null;
 let savedFeelsLike = null;
 let tempMax = null;
 let tempMin = null;
-let iconId = null;
+let iconId = [];
 let hourTempCel = [];
 let hourTempFar = [];
 let dayTempMax = [];
 let dayTempMin = [];
+let farenheit = document.querySelector("#farenheit");
+farenheit.addEventListener("click", convertToFarenheit);
+let celsius = document.querySelector("#celsius");
+celsius.addEventListener("click", convertToCelsius);
 
 function showCurrentPosition(position) {
   console.log(position);
@@ -122,8 +127,27 @@ function showWeather(response) {
   iconMain.innerHTML = `<img src="img/${iconId}.png" id="weather-icon">`;
   let latitude = response.data.coord.lat;
   let longitude = response.data.coord.lon;
+  let backgroundImage = document.querySelector(".container");
+  window.value = changeBackground(iconId);
+  if (changeBackground(iconId)) {
+    backgroundImage.style.backgroundImage = "url('img/day-background2.png')";
+    celsius.style.color = "black";
+    farenheit.style.color = "#1284FF";
+  } else {
+    backgroundImage.style.backgroundImage = "url('img/night-background2.png')";
+    celsius.style.color = "white";
+    farenheit.style.color = "#1284FF";
+  }
   let apiUrl = `${apiUrlForecast}lat=${latitude}&lon=${longitude}&exclude=current,minutely&appid=${apiKey}&units=metric`;
   axios.get(apiUrl).then(displayForecast);
+}
+
+function changeBackground(icon) {
+  if (icon.includes("d")) {
+    return true;
+  } else {
+    return false;
+  }
 }
 //Forecast section
 function displayForecast(response) {
@@ -210,7 +234,6 @@ function convertToFarenheit(event) {
   feelsLike.innerHTML = `${feelsLikeFar}°`;
   let hourTemp = document.querySelectorAll(".deg-hour");
   hourTemp.forEach((hourTemp, i) => {
-    console.log(i);
     hourTempFar[i] = Math.round(hourTempCel[i] * 1.8 + 32);
     hourTemp.innerHTML = `${hourTempFar[i]}°`;
   });
@@ -219,15 +242,16 @@ function convertToFarenheit(event) {
     let dayTempMaxFar = Math.round(dayTempMax[i] * 1.8 + 32);
     let dayTempMinFar = Math.round(dayTempMin[i] * 1.8 + 32);
     weekDayTemp.innerHTML = `${dayTempMaxFar}°/${dayTempMinFar}°`;
-    console.log(weekDayTemp);
   });
-  if (farenheit) {
-    this.style.color = "black";
+
+  if (window.value) {
+    farenheit.style.color = "black";
+    celsius.style.color = "#1284FF";
+  } else {
+    farenheit.style.color = "white";
     celsius.style.color = "#1284FF";
   }
 }
-let farenheit = document.querySelector("#farenheit");
-farenheit.addEventListener("click", convertToFarenheit);
 
 //Convert F° to C°
 function convertToCelsius(event) {
@@ -246,20 +270,12 @@ function convertToCelsius(event) {
   weekDayTemp.forEach((weekDayTemp, i) => {
     weekDayTemp.innerHTML = `${dayTempMax[i]}°/${dayTempMin[i]}°`;
   });
-  if (celsius) {
-    this.style.color = "black";
-    farenheit.style.color = "#1284FF";
-  }
-}
-let celsius = document.querySelector("#celsius");
-celsius.addEventListener("click", convertToCelsius);
 
-//Background Change
-function changeBackground(iconId) {
-  let backgroundImage = document.querySelector(".container");
-  if (iconId.includes("n")) {
-    return backgroundImage.setAttribute("src", "img/night-background2.png");
+  if (window.value) {
+    farenheit.style.color = "#1284FF";
+    celsius.style.color = "black";
   } else {
-    return backgroundImage.setAttribute("src", "img/day-background2.png");
+    farenheit.style.color = "#1284FF";
+    celsius.style.color = "white";
   }
 }
